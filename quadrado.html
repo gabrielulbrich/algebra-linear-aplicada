@@ -1,0 +1,94 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <style>
+            body {
+                margin: 0px;
+                padding: 0px;
+            }
+            
+            #myCanvas {
+               border: 1px solid #9C9898;
+            }
+        </style>
+        <script>
+            function desenhaQuadrado(c, context){
+                const resetX = Math.abs(c[0].x - c[1].x);
+                const resetY = Math.abs(c[0].y - c[1].y);
+
+                for ( i = 0 ; i < resetX; i++){                    
+                    for( j = 0 ; j < resetY; j++){
+                        if((c[0].x < c[1].x) && (c[0].y > c[1].y))
+                            context.fillRect(c[0].x + i, c[1].y + j, 1, 1);                       
+                        if((c[0].x > c[1].x) && (c[0].y > c[1].y))
+                            context.fillRect(c[1].x + i, c[1].y + j, 1, 1);
+                        if ((c[0].x > c[1].x) && (c[0].y < c[1].y))
+                            context.fillRect(c[1].x + i, c[0].y + j, 1, 1);
+                        if((c[0].x < c[1].x) && (c[0].y < c[1].y))
+                            context.fillRect(c[0].x + i, c[0].y + j, 1, 1);
+                    }
+                }
+                c.length = 0;
+            }
+
+            function limparTela(context, canvas){                
+                context.clearRect(0, 0, canvas.width, canvas.height);            
+            }
+
+            function limparLista(lista){
+                while (lista.firstChild) {
+                    lista.removeChild(lista.firstChild);   
+                }
+            }
+
+            function criarListaCoordenadas(mousePos, lista){
+                var li = document.createElement("li");                    
+                position = JSON.stringify(mousePos);                         
+                var t = document.createTextNode(position);
+                li.appendChild(t);
+                lista.appendChild(li);
+            }
+
+            function criarPonto(context,coordenada){
+                context.beginPath();
+                context.arc(coordenada.x, coordenada.y, 3, 0, 2 * Math.PI);
+                context.fillStyle = "black";
+                context.fill();
+            }
+            
+            window.onload = function(){      
+                var canvas = document.getElementById('myCanvas');
+                var context = canvas.getContext('2d');
+                var lista = document.getElementById("li");
+                var mousePos = 0;     
+                var coordenada = {}, cart = []; 
+
+                canvas.addEventListener('click', function(e){
+                    if(lista.childElementCount > 1){
+                        limparTela(context, canvas);
+                        limparLista(lista);
+                    }
+                    coordenada = {};
+                    coordenada.x = e.clientX;
+                    coordenada.y = e.clientY;
+                    cart.push(coordenada);
+                    criarPonto(context, coordenada);
+                    criarListaCoordenadas(coordenada, lista); 
+                    if (cart.length >= 2)
+                        desenhaQuadrado(cart, context)                                       
+                })                
+            };
+            
+        </script>
+    </head>
+    <body onmousedown="return false;">
+        <canvas id="myCanvas" width="700" height="600">
+        </canvas>
+    <div>
+        <ul>
+            <li id="li"></li>
+        </ul>
+    </div>
+
+    </body>
+</html>

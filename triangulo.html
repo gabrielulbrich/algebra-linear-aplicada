@@ -13,21 +13,36 @@
         </style>
         <script>
             function desenhaTriangulo(c, context){
-                context.beginPath();
+                context.beginPath();                
 
-                m = ((c[1].y - c[0].y)/(c[1].x - c[0].x));
-                for ( i = c[0].x ; i < c[1].x; i++){                    
-                    context.fillRect(i, m*i + (((-(m * c[0].x))+c[0].y)), 1, 1);
-                }
-                m = ((c[0].y - c[2].y)/(c[0].x - c[2].x));
-                for ( i = c[0].x ; i < c[2].x; i++){                  
-                    context.fillRect(i, m*i + ((-(m * c[2].x))+c[2].y), 1, 1);
-                }
-                m = ((c[1].y - c[2].y)/(c[1].x - c[2].x));
-                for ( i = c[1].x ; i < c[2].x; i++){                  
-                    context.fillRect(i, m*i + ((-(m * c[1].x))+c[1].y), 1, 1);
-                }
+                desenhaLinha(c[0], c[1], context);
+                desenhaLinha(c[0], c[2], context);
+                desenhaLinha(c[1], c[2], context);
+
                 c.length = 0;
+            }
+
+            function desenhaLinha(c1, c2, context){
+                c = [];
+                c.push(c1);
+                c.push(c2);
+                m = ((c[1].y - c[0].y)/(c[1].x - c[0].x)); //angulo
+                if((m > 1) || (m<-1)){
+                    m2 = ((c[1].x - c[0].x)/(c[1].y - c[0].y));
+                    c = ordenaCoordenadas(c, 'y');
+                    a = c[0].y;
+                    for ( i = c[0].y ; i < c[1].y; i++){
+                        a++
+                        context.fillRect(m2*a + (((-(m2 * c[0].y))+c[0].x)) , a, 1, 1);
+                    }
+                }else{
+                    c = ordenaCoordenadas(c, 'x');
+                    a = c[0].x;
+                    for ( i = c[0].x ; i < c[1].x; i++){
+                        a++
+                        context.fillRect(a, m*a + (((-(m * c[0].x))+c[0].y)), 1, 1);
+                    }
+                }
             }
 
             function limparTela(context, canvas){                
@@ -55,11 +70,18 @@
                 context.fill();
             }
             
-            function ordenaCoordenadas(c){
-                c.sort(function(a, b) {
+            function ordenaCoordenadas(c, orderBy){
+                if(orderBy == 'x'){
+                    c.sort(function(a, b) {
                     return a.x < b.x ? -1 : (a.x > b.x) ? 1 : 0;
-                });
-                return c;           
+                    });
+                    return c;
+                }else{
+                    c.sort(function(a, b) {
+                    return a.y < b.y ? -1 : (a.y > b.y) ? 1 : 0;
+                    });
+                    return c;
+                }      
             }
             
             window.onload = function(){      
@@ -81,8 +103,7 @@
                     cart.push(coordenada);
                     criarPonto(context, coordenada);
                     criarListaCoordenadas(coordenada, lista);
-                    if (cart.length >= 2){
-                        cart = ordenaCoordenadas(cart);
+                    if (cart.length >= 3){                        
                         desenhaTriangulo(cart, context)
                     }
                 })

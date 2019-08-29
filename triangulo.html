@@ -3,12 +3,53 @@
     <head>
         <style>
             body {
-                margin: 0px;
-                padding: 0px;
+                margin: 0;
+                padding: 0;
             }
-            
+
+            section{
+                display: block;
+            }
+
             #myCanvas {
                border: 1px solid #9C9898;
+            }
+
+            .sidenav {
+                height: 100%;
+                width: 160px;
+                /* position: fixed; */
+                z-index: 1;
+                top: 0;
+                left: 0;
+                background-color: #111;
+                overflow-x: hidden;
+                padding: 20px 0;
+                float:right;
+            }
+
+            .sidenav button{
+                width: 100%;      
+                border: none;
+                color: #818181;
+                background-color: #111;
+                padding: 15px 0;
+                text-align: center;
+                text-decoration: none;
+                display: inline-block;
+                font-size: 20px;
+                
+            }
+
+            button:focus {outline:0;cursor: pointer;}
+
+            .sidenav a:hover {
+                color: #f1f1f1;
+            }
+
+            @media screen and (max-height: 450px) {
+                .sidenav {padding-top: 15px;}
+                .sidenav a {font-size: 18px;}
             }
         </style>
         <script>
@@ -108,17 +149,23 @@
                     }
                 })
             };
-            
         </script>
     </head>
-    <body onmousedown="return false;">
-        <canvas id="myCanvas" width="700" height="600">
-        </canvas>
-    <div>
-        <ul>
-            <li id="li"></li>
-        </ul>
-    </div>
-
+    <body>
+            <div class="sidenav">
+                <button href="#about">Flip</button>
+                <button href="#services">Warp</button>
+                <button href="#clients">Rotation 180º</button>
+                <button href="#contact">Resize 2x</button>
+            </div>
+                
+            <div class="main">
+                <canvas id="myCanvas" width="700" height="600"></canvas>
+                <div>
+                    <ul>
+                        <li id="li"></li>
+                    </ul>
+                </div>
+            </div>
     </body>
 </html>

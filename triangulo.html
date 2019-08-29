@@ -60,7 +60,7 @@
                 desenhaLinha(c[0], c[2], context);
                 desenhaLinha(c[1], c[2], context);
 
-                c.length = 0;
+                
             }
 
             function desenhaLinha(c1, c2, context){
@@ -127,6 +127,8 @@
             
             window.onload = function(){      
                 var canvas = document.getElementById('myCanvas');
+                var resize = document.getElementById('resize');
+                var rotation = document.getElementById('rotation');
                 var context = canvas.getContext('2d');
                 var lista = document.getElementById("li");
                 var mousePos = 0;     
@@ -135,6 +137,7 @@
 
                 canvas.addEventListener('click', function(e){
                     if(lista.childElementCount > 2){
+                        c.length = 0;
                         limparTela(context, canvas);
                         limparLista(lista);
                     }
@@ -148,15 +151,34 @@
                         desenhaTriangulo(cart, context)
                     }
                 })
+
+                resize.addEventListener('click', function(e){
+                    for(i = 0; i < 3; i++){
+                        cart[i].x = 2*cart[i].x + 0*cart[i].y;
+                        cart[i].y = 0*cart[i].x + 2*cart[i].y;
+                    }
+                    desenhaTriangulo(cart, context);
+                })
+
+                rotation.addEventListener('click', function(e){
+                    console.log('rotate');
+                    for(i = 0; i < 3; i++){
+                        cart[i].x = Math.cos(15 * Math.PI / 180.0)*cart[i].x + Math.sin(-15 * Math.PI / 180.0)*cart[i].y;
+                        cart[i].y = Math.sin(15 * Math.PI / 180.0)*cart[i].x + Math.cos(15 * Math.PI / 180.0)*cart[i].y;
+                    }
+                    console.log(cart)
+                    desenhaTriangulo(cart, context);
+                })
+                
             };
         </script>
     </head>
     <body>
-            <div class="sidenav">
-                <button href="#about">Flip</button>
-                <button href="#services">Warp</button>
-                <button href="#clients">Rotation 180º</button>
-                <button href="#contact">Resize 2x</button>
+            <div class="sidenav">                
+                <button>Warp</button>
+                <button id="resize">Resize 2x</button>
+                <button id="rotation">Rotation 15º</button>
+                <button>Flip</button>
             </div>
                 
             <div class="main">

@@ -61,6 +61,7 @@
                 desenhaLinha(c[1], c[2], context);
 
                 
+                
             }
 
             function desenhaLinha(c1, c2, context){
@@ -68,18 +69,23 @@
                 c.push(c1);
                 c.push(c2);
                 m = ((c[1].y - c[0].y)/(c[1].x - c[0].x)); //angulo
-                if((m > 1) || (m<-1)){
+                if((m > 1) || (m<-1))
+                {
                     m2 = ((c[1].x - c[0].x)/(c[1].y - c[0].y));
                     c = ordenaCoordenadas(c, 'y');
                     a = c[0].y;
-                    for ( i = c[0].y ; i < c[1].y; i++){
+                    for ( i = c[0].y ; i < c[1].y; i++)
+                    {
                         a++
                         context.fillRect(m2*a + (((-(m2 * c[0].y))+c[0].x)) , a, 1, 1);
                     }
-                }else{
+                }
+                else
+                {
                     c = ordenaCoordenadas(c, 'x');
                     a = c[0].x;
-                    for ( i = c[0].x ; i < c[1].x; i++){
+                    for ( i = c[0].x ; i < c[1].x; i++)
+                    {
                         a++
                         context.fillRect(a, m*a + (((-(m * c[0].x))+c[0].y)), 1, 1);
                     }
@@ -124,15 +130,54 @@
                     return c;
                 }      
             }
+
+            function getMax(getBy, c)
+            {
+                var max = 0;
+                if(getBy == 'x'){
+                    c.forEach(function(e){
+                    if (max < e.x)
+                        max = e.x;
+                    })
+                }
+                if (getBy == 'y'){
+                    c.forEach(function(e){
+                    if (max < e.y)
+                        max = e.y;
+                    })
+                }                
+                return max;
+            }
+
+            function getMin(getBy, c)
+            {
+                var min = 0;
+                if(getBy == 'x'){
+                    var min = c[0].x;
+                    c.forEach(function(e){                    
+                    if (min > e.x)
+                        min = e.x;
+                    })
+                }
+                if (getBy == 'y'){
+                    var min = c[0].y;
+                    c.forEach(function(e){                                       
+                    if (min > e.y)                        
+                        min = e.y;
+                    })
+                }                
+                return min;
+            }
             
             window.onload = function(){      
-                var canvas = document.getElementById('myCanvas');
-                var resize = document.getElementById('resize');
-                var rotation = document.getElementById('rotation');
-                var context = canvas.getContext('2d');
-                var lista = document.getElementById("li");
-                var mousePos = 0;     
-                var coordenada = {}, cart = []; 
+                var canvas      = document.getElementById('myCanvas');
+                var resize      = document.getElementById('resize');
+                var rotation    = document.getElementById('rotation');
+                var fill        = document.getElementById('fill');
+                var context     = canvas.getContext('2d');
+                var lista       = document.getElementById("li");
+                var mousePos    = 0;     
+                var coordenada  = {}, cart = []; 
                 x = 1;
 
                 canvas.addEventListener('click', function(e){
@@ -148,7 +193,7 @@
                     criarPonto(context, coordenada);
                     criarListaCoordenadas(coordenada, lista);
                     if (cart.length >= 3){                        
-                        desenhaTriangulo(cart, context)
+                        desenhaTriangulo(cart, context)                        
                     }
                 })
 
@@ -158,6 +203,19 @@
                         cart[i].y = 0*cart[i].x + 2*cart[i].y;
                     }
                     desenhaTriangulo(cart, context);
+                })
+
+                fill.addEventListener('click', function(e){
+                    const maxX = getMax('x', cart);
+                    const minX = getMin('x', cart);
+                    const maxY = getMax('y', cart);
+                    const minY = getMin('y', cart);
+
+                    for (i = minY; i < maxY ; i++){
+                        for (j = minX; j < maxX ; j++){
+                            //se tiver dentro do triangulo, preenche. Barycentric coordinates
+                        }
+                    }
                 })
 
                 rotation.addEventListener('click', function(e){
@@ -178,6 +236,7 @@
                 <button>Warp</button>
                 <button id="resize">Resize 2x</button>
                 <button id="rotation">Rotation 15º</button>
+                <button id="fill">Fill</button>
                 <button>Flip</button>
             </div>
                 
